@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alex Chen - Full Stack Developer</title>
+    <style>
+        /* Base styles and CSS variables (as before) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #0f172a;
+            --accent: #f59e0b;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --bg: #ffffff;
+            --bg-alt: #f8fafc;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --fade-in-duration: 0.8s;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg);
+            transition: background 0.5s, color 0.5s;
+        }
+        /* Day/Night Theme Switcher */
+        .theme-toggle {
+            position: fixed;
+            top: 24px;
+            right: 32px;
+            z-index: 1200;
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            padding: 6px 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            transition: background 0.3s, color 0.3s;
+        }
+        .theme-toggle span {
+            margin: 0 6px;
+            font-size: 1.3rem;
+            line-height: 1;
+            user-select: none;
+        }
+        .theme-toggle .slider {
+            width: 36px;
+            height: 18px;
+            background: var(--border);
+            border-radius: 9px;
+            margin: 0 6px;
+            position: relative;
+            transition: background 0.3s;
+        }
+        .theme-toggle .slider::before {
+            content: '';
+            position: absolute;
+            left: 2px;
+            top: 2px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--primary);
+            transition: left 0.3s, background 0.5s;
+        }
+        .theme-toggle.night .slider::before {
+            left: 20px;
+            background: var(--accent);
+        }
+        /* Night theme overrides */
+        body.night {
+            --bg: #1a202c;
+            --bg-alt: #232946;
+            --text: #f8fafc;
+            --text-light: #94a3b8;
+            --secondary: #111827;
+            --border: #374151;
+        }
+        body.night {
+            background: var(--bg);
+            color: var(--text);
+        }
+        body.night header,
+        body.night .skills,
+        body.night .projects,
+        body.night .certificates,
+        body.night .progress-section,
+        body.night .project-card,
+        body.night .certificate-card {
+            background: var(--bg-alt) !important;
+        }
+        body.night .skill-card,
+        body.night .progress-section,
+        body.night .project-card,
+        body.night .certificate-card {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+        }
+        body.night .nav-links a {
+            color: var(--text-light);
+        }
+        body.night .nav-links a:hover {
+            color: var(--primary);
+        }
+        body.night .btn-secondary {
+            border-color: var(--border);
+            color: var(--text-light);
+        }
+        body.night .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        body.night .profile-card {
+            background: #232946 !important;
+        }
+        body.night .contact-form {
+            background: rgba(34, 43, 69, 0.4);
+        }
+        body.night .progress-bar {
+            background: #374151;
+        }
+        body.night .tag {
+            background: #232946;
+            color: var(--accent);
+        }
+        body.night footer {
+            background: #111827;
+        }
+        /* Loader Styles, header, nav, hero, etc. as before... */
+        /* ...rest of your original styles here... */
+        /* Add fade-out class for scroll-up hiding effect */
+        .fade-out {
+            opacity: 0 !important;
+            transform: translateY(30px) scale(0.98) !important;
+            transition: opacity var(--fade-in-duration) ease, transform var(--fade-in-duration) ease;
+        }
+        /* Testimonial section styles */
+        .testimonial-section {
+            background: var(--bg-alt);
+            padding: 90px 0;
+            text-align: center;
+        }
+        .testimonial-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 2rem;
+        }
+        .testimonial-card {
+            display: inline-block;
+            background: white;
+            border-radius: 18px;
+            padding: 36px 28px;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.09);
+            text-align: left;
+            position: relative;
+            transition: background 0.4s;
+        }
+        .testimonial-quote {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            font-style: italic;
+            line-height: 1.8;
+        }
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+        .testimonial-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1rem;
+            border: 2px solid var(--primary);
+        }
+        .testimonial-author-info {
+            font-size: 1rem;
+        }
+        .testimonial-author-name {
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .testimonial-author-role {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+        /* Developer image styling */
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            font-weight: 700;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(99,102,241,0.08);
+        }
+        .profile-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+        }
+        /* ...rest of responsive and animation styles as before... */
+        @media (max-width: 768px) {
+            .theme-toggle { right: 16px; top: 16px; }
+            .testimonial-card { padding: 20px 12px; }
+            .profile-img { width: 120px; height: 120px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Day/Night Theme Switcher -->
+    <div class="theme-toggle" id="themeToggle" title="Switch theme">
+        <span>🌞</span>
+        <div class="slider"></div>
+        <span>🌜</span>
+    </div>
+    <!-- Loader -->
+    <div class="loader-container" id="loader">
+        <div class="loader"></div>
+        <div class="loader-text">Loading Portfolio...</div>
+        <div class="loader-progress">
+            <div class="loader-progress-bar"></div>
+        </div>
+    </div>
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <header>
+            <nav class="container">
+                <a href="#" class="logo">Alex Chen</a>
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#certificates">Certificates</a></li>
+                    <li><a href="#testimonial">Testimonial</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+        <section id="home" class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h1 id="heroTitle"><span class="typing-cursor"></span></h1>
+                        <p class="subtitle">Crafting Digital Experiences</p>
+                        <p>I'm a passionate full-stack developer with 5+ years of experience building scalable web applications. I specialize in React, Node.js, and modern web technologies.</p>
+                        <div class="cta-buttons">
+                            <a href="#projects" class="btn btn-primary">View My Work</a>
+                            <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+                        </div>
+                    </div>
+                    <div class="hero-image">
+                        <div class="profile-card">
+                            <div class="profile-img">
+                                <!-- Replace with your own image source or use Unsplash/avatars.dicebear/etc -->
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Alex Chen Developer" loading="lazy">
+                            </div>
+                            <h3>Alex Chen</h3>
+                            <p>Senior Full Stack Developer</p>
+                            <p>San Francisco, CA</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="skills" class="skills">
+            <div class="container">
+                <h2 class="section-title">Skills & Expertise</h2>
+                <div class="skills-container">
+                    <div class="skills-grid">
+                        <div class="skill-card fade-in">
+                            <div class="skill-icon">⚛️</div>
+                            <h3>Frontend Development</h3>
+                            <p>React, Vue.js, JavaScript, TypeScript, HTML5, CSS3, Tailwind CSS</p>
+                        </div>
+                        <div class="skill-card fade-in">
+                            <div class="skill-icon">🚀</div>
+                            <h3>Backend Development</h3>
+                            <p>Node.js, Express, Python, Django, REST APIs, GraphQL</p>
+                        </div>
+                        <div class="skill-card fade-in">
+                            <div class="skill-icon">💾</div>
+                            <h3>Database & Cloud</h3>
+                            <p>MongoDB, PostgreSQL, AWS, Docker, Kubernetes, CI/CD</p>
+                        </div>
+                        <div class="skill-card fade-in">
+                            <div class="skill-icon">🎨</div>
+                            <h3>UI/UX Design</h3>
+                            <p>Figma, Adobe XD, Responsive Design, Accessibility, User Research</p>
+                        </div>
+                    </div>
+                    <div class="progress-section">
+                        <h3>Technical Proficiency</h3>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span>JavaScript / TypeScript</span>
+                                <span>95%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" data-width="95%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span>React / Vue.js</span>
+                                <span>90%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" data-width="90%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span>Node.js / Express</span>
+                                <span>88%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" data-width="88%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span>Python / Django</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" data-width="85%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span>AWS / Cloud Services</span>
+                                <span>80%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" data-width="80%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span>UI/UX Design</span>
+                                <span>75%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" data-width="75%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="projects" class="projects">
+            <div class="container">
+                <h2 class="section-title">Featured Projects</h2>
+                <div class="projects-grid">
+                    <div class="project-card fade-in">
+                        <div class="project-image ecommerce">E-Commerce Platform</div>
+                        <div class="project-content">
+                            <h3 class="project-title">Full-Stack E-Commerce Platform</h3>
+                            <p class="project-description">A comprehensive e-commerce solution with real-time inventory management, secure payment processing, admin dashboard, and customer analytics. Features include product catalog, shopping cart, order tracking, and multi-vendor support.</p>
+                            <div class="project-tags">
+                                <span class="tag">React</span>
+                                <span class="tag">Node.js</span>
+                                <span class="tag">MongoDB</span>
+                                <span class="tag">Stripe</span>
+                                <span class="tag">AWS</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="#">🔗 Live Demo</a>
+                                <a href="#">📂 GitHub</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card fade-in">
+                        <div class="project-image taskflow">TaskFlow Pro</div>
+                        <div class="project-content">
+                            <h3 class="project-title">Collaborative Task Management</h3>
+                            <p class="project-description">An advanced project management tool with real-time collaboration, kanban boards, time tracking, team chat, file sharing, and automated workflow triggers. Supports agile methodologies and integrates with popular tools.</p>
+                            <div class="project-tags">
+                                <span class="tag">Vue.js</span>
+                                <span class="tag">Express</span>
+                                <span class="tag">Socket.io</span>
+                                <span class="tag">PostgreSQL</span>
+                                <span class="tag">Redis</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="#">🔗 Live Demo</a>
+                                <a href="#">📂 GitHub</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card fade-in">
+                        <div class="project-image analytics">Analytics Dashboard</div>
+                        <div class="project-content">
+                            <h3 class="project-title">Data Visualization Platform</h3>
+                            <p class="project-description">Interactive business intelligence dashboard with real-time data processing, custom chart builder, automated reporting, machine learning insights, and multi-tenant architecture for enterprise clients.</p>
+                            <div class="project-tags">
+                                <span class="tag">React</span>
+                                <span class="tag">D3.js</span>
+                                <span class="tag">Python</span>
+                                <span class="tag">FastAPI</span>
+                                <span class="tag">TensorFlow</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="#">🔗 Live Demo</a>
+                                <a href="#">📂 GitHub</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <main>
+            <section id="certificates" class="certificates">
+                <div class="container">
+                    <h2 class="section-title">Certifications & Achievements</h2>
+                    <div class="certificates-grid">
+                        <div class="certificate-card fade-in">
+                            <div class="certificate-icon">🏆</div>
+                            <h3 class="certificate-title">AWS Certified Solutions Architect</h3>
+                            <p class="certificate-issuer">Amazon Web Services</p>
+                            <p class="certificate-date">2024</p>
+                        </div>
+                        <div class="certificate-card fade-in">
+                            <div class="certificate-icon">⚛️</div>
+                            <h3 class="certificate-title">React Professional Developer</h3>
+                            <p class="certificate-issuer">Meta (Facebook)</p>
+                            <p class="certificate-date">2023</p>
+                        </div>
+                        <div class="certificate-card fade-in">
+                            <div class="certificate-icon">🚀</div>
+                            <h3 class="certificate-title">Full Stack Web Development</h3>
+                            <p class="certificate-issuer">freeCodeCamp</p>
+                            <p class="certificate-date">2023</p>
+                        </div>
+                        <div class="certificate-card fade-in">
+                            <div class="certificate-icon">🎯</div>
+                            <h3 class="certificate-title">Google Cloud Professional</h3>
+                            <p class="certificate-issuer">Google Cloud Platform</p>
+                            <p class="certificate-date">2024</p>
+                        </div>
+                        <div class="certificate-card fade-in">
+                            <div class="certificate-icon">🔐</div>
+                            <h3 class="certificate-title">Cybersecurity Fundamentals</h3>
+                            <p class="certificate-issuer">IBM</p>
+                            <p class="certificate-date">2023</p>
+                        </div>
+                        <div class="certificate-card fade-in">
+                            <div class="certificate-icon">📊</div>
+                            <h3 class="certificate-title">Data Science & Machine Learning</h3>
+                            <p class="certificate-issuer">Coursera</p>
+                            <p class="certificate-date">2024</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Testimonial Section -->
+            <section id="testimonial" class="testimonial-section">
+                <div class="container">
+                    <h2 class="testimonial-title">What People Say</h2>
+                    <div class="testimonial-card fade-in">
+                        <div class="testimonial-quote">
+                            “Alex is one of the most talented full-stack engineers I’ve worked with. His attention to detail, creative solutions, and ability to deliver on time have been invaluable to our team. Highly recommended for any project!”
+                        </div>
+                        <div class="testimonial-author">
+                            <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Jessica Lee" class="testimonial-avatar" />
+                            <div class="testimonial-author-info">
+                                <div class="testimonial-author-name">Jessica Lee</div>
+                                <div class="testimonial-author-role">Product Manager, InnovateX</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="contact" class="contact">
+                <div class="container">
+                    <h2 class="section-title">Let's Work Together</h2>
+                    <div class="contact-content">
+                        <div class="contact-info">
+                            <h3>Get In Touch</h3>
+                            <p>I'm always interested in hearing about new opportunities and exciting projects. Let's discuss how we can work together!</p>
+                            <div class="contact-details">
+                                <div class="contact-item">
+                                    <span>📧</span>
+                                    <span>alex.chen@example.com</span>
+                                </div>
+                                <div class="contact-item">
+                                    <span>📱</span>
+                                    <span>+1 (555) 123-4567</span>
+                                </div>
+                                <div class="contact-item">
+                                    <span>📍</span>
+                                    <span>San Francisco, CA</span>
+                                </div>
+                                <div class="contact-item">
+                                    <span>💼</span>
+                                    <span>linkedin.com/in/alexchen</span>
+                                </div>
+                            </div>
+                        </div>
+                        <form class="contact-form">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" id="name" name="name" placeholder="Your Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Message</label>
+                                <textarea id="message" name="message" rows="5" placeholder="Tell me about your project..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer>
+            <div class="container">
+                <p>&copy; 2025 Alex Chen. All rights reserved. Built with passion and modern web technologies.</p>
+            </div>
+        </footer>
+    </div>
+    <script>
+        // Theme toggle logic
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        function setTheme(mode) {
+            if (mode === 'night') {
+                body.classList.add('night');
+                themeToggle.classList.add('night');
+                localStorage.setItem('theme', 'night');
+            } else {
+                body.classList.remove('night');
+                themeToggle.classList.remove('night');
+                localStorage.setItem('theme', 'day');
+            }
+        }
+        // Load theme from localStorage
+        if (localStorage.getItem('theme') === 'night') setTheme('night');
+        themeToggle.addEventListener('click', () => {
+            setTheme(body.classList.contains('night') ? 'day' : 'night');
+        });
+
+        // Loader and initialization
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                const mainContent = document.getElementById('mainContent');
+                loader.classList.add('hide');
+                mainContent.classList.add('show');
+                setTimeout(() => {
+                    startTypingAnimation();
+                }, 500);
+            }, 3000); // 3 second loader
+        });
+
+        // Enhanced typing animation with multiple phrases
+        function startTypingAnimation() {
+            const titles = [
+                'Full Stack Developer',
+                'React Specialist',
+                'Node.js Expert',
+                'UI/UX Designer',
+                'Cloud Architect'
+            ];
+            let currentTitleIndex = 0;
+            let currentCharIndex = 0;
+            let isDeleting = false;
+            const heroTitle = document.getElementById('heroTitle');
+            const cursor = heroTitle.querySelector('.typing-cursor');
+            function typeText() {
+                const currentTitle = titles[currentTitleIndex];
+                if (isDeleting) {
+                    heroTitle.textContent = currentTitle.substring(0, currentCharIndex - 1);
+                    currentCharIndex--;
+                    if (currentCharIndex === 0) {
+                        isDeleting = false;
+                        currentTitleIndex = (currentTitleIndex + 1) % titles.length;
+                        setTimeout(typeText, 500);
+                        return;
+                    }
+                } else {
+                    heroTitle.textContent = currentTitle.substring(0, currentCharIndex + 1);
+                    currentCharIndex++;
+                    if (currentCharIndex === currentTitle.length) {
+                        setTimeout(() => {
+                            isDeleting = true;
+                            typeText();
+                        }, 2000);
+                        return;
+                    }
+                }
+                heroTitle.appendChild(cursor);
+                const typingSpeed = isDeleting ? 50 : 100;
+                setTimeout(typeText, typingSpeed);
+            }
+            typeText();
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+                header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+                header.style.boxShadow = 'none';
+            }
+        });
+
+        // Intersection Observer for animations and progress bars
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    entry.target.classList.remove('fade-out');
+                    if (entry.target.closest('.skills')) animateProgressBars();
+                }
+            });
+        }, observerOptions);
+
+        // Progress bar animation
+        function animateProgressBars() {
+            const progressFills = document.querySelectorAll('.progress-fill');
+            progressFills.forEach((fill, index) => {
+                setTimeout(() => {
+                    const width = fill.getAttribute('data-width');
+                    fill.style.width = width;
+                    fill.classList.add('animate');
+                }, index * 200);
+            });
+        }
+        // Observe elements for animations
+        document.querySelectorAll('.skill-card, .project-card, .certificate-card, .progress-section, .testimonial-card').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Visibility animation on scroll up/down
+        let lastScroll = window.scrollY;
+        let ticking = false;
+        function handleAnimatedHideShow() {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const scrollNow = window.scrollY;
+                    // Down: fade-in, Up: fade-out
+                    const fadeEls = document.querySelectorAll('.fade-in');
+                    if (scrollNow > lastScroll) {
+                        // Scrolling down: ensure fade-in
+                        fadeEls.forEach(el => el.classList.remove('fade-out'));
+                    } else {
+                        // Scrolling up: fade-out when approaching top
+                        if (scrollNow < 100) {
+                            fadeEls.forEach((el, idx) => {
+                                setTimeout(() => el.classList.add('fade-out'), idx * 80);
+                            });
+                        } else {
+                            fadeEls.forEach(el => el.classList.remove('fade-out'));
+                        }
+                    }
+                    lastScroll = scrollNow;
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }
+        window.addEventListener('scroll', handleAnimatedHideShow);
+
+        // Form submission with validation
+        document.querySelector('.contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = this.querySelector('#name').value;
+            const email = this.querySelector('#email').value;
+            const message = this.querySelector('#message').value;
+            if (!name || !email || !message) {
+                alert('Please fill in all fields.');
+                return;
+            }
+            if (!/\S+@\S+\.\S+/.test(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Sending...';
+            submitBtn.disabled = true;
+            setTimeout(() => {
+                alert('Thank you for your message! I\'ll get back to you soon.');
+                this.reset();
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }, 2000);
+        });
+
+        // Project card interactive hover
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+        // Certificate card hover effects
+        document.querySelectorAll('.certificate-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                const icon = this.querySelector('.certificate-icon');
+                icon.style.transform = 'scale(1.2) rotate(5deg)';
+            });
+            card.addEventListener('mouseleave', function() {
+                const icon = this.querySelector('.certificate-icon');
+                icon.style.transform = 'scale(1) rotate(0deg)';
+            });
+        });
+        // Floating animation to skill icons
+        document.querySelectorAll('.skill-icon').forEach((icon, index) => {
+            icon.style.animation = `float 3s ease-in-out infinite`;
+            icon.style.animationDelay = `${index * 0.5}s`;
+        });
+        // CSS for floating animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0%, 100% { transform: translateY(0px); }
+                50% { transform: translateY(-10px); }
+            }
+        `;
+        document.head.appendChild(style);
+        // Add particle effect to hero section
+        function createParticles() {
+            const hero = document.querySelector('.hero');
+            for (let i = 0; i < 5; i++) {
+                const particle = document.createElement('div');
+                particle.style.cssText = `
+                    position: absolute;
+                    width: 4px;
+                    height: 4px;
+                    background: var(--primary);
+                    border-radius: 50%;
+                    opacity: 0.3;
+                    animation: floatParticle ${5 + Math.random() * 5}s infinite linear;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                `;
+                hero.appendChild(particle);
+            }
+        }
+        // Add particle animation CSS
+        const particleStyle = document.createElement('style');
+        particleStyle.textContent = `
+            @keyframes floatParticle {
+                0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+                10% { opacity: 0.3; }
+                90% { opacity: 0.3; }
+                100% { transform: translate(-100px, -100px) rotate(360deg); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(particleStyle);
+        // Initialize particles after loader
+        setTimeout(() => {
+            createParticles();
+        }, 3500);
+
+        // Add scroll progress indicator
+        const scrollProgress = document.createElement('div');
+        scrollProgress.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            z-index: 10000;
+            transition: width 0.1s ease;
+        `;
+        document.body.appendChild(scrollProgress);
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.body.offsetHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            scrollProgress.style.width = scrollPercent + '%';
+        });
+    </script>
+</body>
+</html>
