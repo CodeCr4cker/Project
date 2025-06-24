@@ -5,10 +5,106 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alex Chen - Full Stack Developer</title>
     <style>
-        /* ...[All your previous CSS here, unchanged]... */
+                    to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-        /* --- Additions for new features --- */
-
+        .progress-fill.animate {
+            transition: width 2s ease-in-out;
+        }
+        /* ...rest of your original styles here... */
+        /* Add fade-out class for scroll-up hiding effect */
+        .fade-out {
+            opacity: 0 !important;
+            transform: translateY(30px) scale(0.98) !important;
+            transition: opacity var(--fade-in-duration) ease, transform var(--fade-in-duration) ease;
+        }
+        /* Testimonial section styles */
+        .testimonial-section {
+            background: var(--bg-alt);
+            padding: 90px 0;
+            text-align: center;
+        }
+        .testimonial-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 2rem;
+        }
+        .testimonial-card {
+            display: inline-block;
+            background: white;
+            border-radius: 18px;
+            padding: 36px 28px;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.09);
+            text-align: left;
+            position: relative;
+            transition: background 0.4s;
+        }
+        .testimonial-quote {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            font-style: italic;
+            line-height: 1.8;
+        }
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+        .testimonial-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1rem;
+            border: 2px solid var(--primary);
+        }
+        .testimonial-author-info {
+            font-size: 1rem;
+        }
+        .testimonial-author-name {
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .testimonial-author-role {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+        /* Developer image styling */
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            font-weight: 700;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(99,102,241,0.08);
+        }
+        .profile-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+        }
+        /* ...rest of responsive and animation styles as before... */
+        @media (max-width: 768px) {
+            .theme-toggle { right: 16px; top: 16px; }
+            .testimonial-card { padding: 20px 12px; }
+            .profile-img { width: 120px; height: 120px; }
+        }
         /* Blog Section */
         .blog-section {
             padding: 90px 0;
