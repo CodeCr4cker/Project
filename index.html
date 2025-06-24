@@ -26,6 +26,16 @@
             --error: #ef4444;
             --fade-in-duration: 0.8s;
         }
+        /* Night theme overrides */
+
+        body.night {
+            --bg: #1a202c;
+            --bg-alt: #232946;
+            --text: #f8fafc;
+            --text-light: #94a3b8;
+            --secondary: #111827;
+            --border: #374151;
+        }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.6;
@@ -79,15 +89,8 @@
             left: 20px;
             background: var(--accent);
         }
-        /* Night theme overrides */
-        body.night {
-            --bg: #1a202c;
-            --bg-alt: #232946;
-            --text: #f8fafc;
-            --text-light: #94a3b8;
-            --secondary: #111827;
-            --border: #374151;
-        }
+        
+        
         body.night {
             background: var(--bg);
             color: var(--text);
