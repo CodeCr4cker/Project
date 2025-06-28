@@ -3,45 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Document</title>
+  <title>Preloader Example</title>
   <style>
-    /* Global Reset and Background */
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-      background-color: red; /* Page background after loader disappears */
-      overflow: hidden;
-    }
-
     /* START PRELOADER DESIGN */
     .preloader {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: #ffffff; /* Solid background to block content */
+      width: 100%;
+      height: 100%;
+      background-color: #fff; /* Fully cover background */
+      text-align: center;
       z-index: 9999999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.9s ease;
+      transition: 0.9s;
     }
 
-    .preloader.preloader-deactivate {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .loader {
-      position: relative;
+    .preloader .loader {
+      position: absolute;
       width: 90px;
       height: 90px;
+      border-radius: 50%;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: 0.5s;
     }
 
-    .loader .loader-outter {
+    .loader-outter {
       position: absolute;
       border: 4px solid #08d665;
       border-left-color: transparent;
@@ -52,7 +42,7 @@
       animation: loader-outter 1s cubic-bezier(0.42, 0.61, 0.58, 0.41) infinite;
     }
 
-    .loader .loader-inner {
+    .loader-inner {
       position: absolute;
       border: 4px solid #08d665;
       border-radius: 50%;
@@ -67,13 +57,44 @@
     }
 
     .loader span {
+      display: block;
       position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
+      left: 0;
+      right: 0;
+      top: calc(100% + 10px);
+      margin: 0 auto;
       color: #08d665;
       font-size: 25px;
       font-weight: 700;
+    }
+
+    .preloader::before,
+    .preloader::after {
+      content: '';
+      position: absolute;
+      width: 60%;
+      height: 100%;
+      top: 0;
+      background: #fff;
+      transition: 0.9s;
+      z-index: -1;
+    }
+
+    .preloader::before { left: 0; }
+    .preloader::after { right: 0; left: auto; }
+
+    .preloader.preloader-deactivate {
+      visibility: hidden;
+    }
+
+    .preloader.preloader-deactivate::after,
+    .preloader.preloader-deactivate::before {
+      width: 0;
+    }
+
+    .preloader.preloader-deactivate .loader {
+      opacity: 0;
+      visibility: hidden;
     }
 
     @keyframes loader-outter {
@@ -85,7 +106,16 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(-360deg); }
     }
-    /* END PRELOADER DESIGN */
+
+    /* Optional: Fade-in page content */
+    body {
+      opacity: 0;
+      transition: opacity 0.9s ease;
+    }
+
+    body.loaded {
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
@@ -100,14 +130,22 @@
   </div>
   <!-- END PRELOADER -->
 
+  <div style="text-align: center; margin-top: 200px;">
+    <h1>Welcome to the Page</h1>
+    <p>This content becomes visible after loader disappears.</p>
+  </div>
+
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       const loader = document.querySelector('.preloader');
+      const body = document.body;
       setTimeout(() => {
         loader.classList.add('preloader-deactivate');
-        setTimeout(() => loader.remove(), 900); // Remove after transition
-        document.body.style.overflow = 'auto'; // Restore scroll
-      }, 3000); // Simulated loading time
+        setTimeout(() => {
+          loader.style.display = 'none';
+          body.classList.add('loaded');
+        }, 900); // matches transition duration
+      }, 3000); // 3 seconds delay
     });
   </script>
 
