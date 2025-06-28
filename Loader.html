@@ -3,35 +3,45 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Preloader Example</title>
+  <title>Document</title>
   <style>
+    /* Ensure full height for html and body */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background-color: red;
+    }
+
     /* START PRELOADER DESIGN */
     .preloader {
       position: fixed;
       top: 0;
+      bottom: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: #fff; /* Fully cover background */
       text-align: center;
       z-index: 9999999;
+      background-color: #fff; /* changed from transparent to fully cover */
       transition: 0.9s;
     }
 
     .preloader .loader {
+      transition: 0.5s;
       position: absolute;
       width: 90px;
       height: 90px;
       border-radius: 50%;
+      display: inline-block;
       left: 0;
       right: 0;
       margin: 0 auto;
-      top: 50%;
-      transform: translateY(-50%);
-      transition: 0.5s;
+      top: 45%;
+      transform: translateY(-45%);
     }
 
-    .loader-outter {
+    .preloader .loader .loader-outter {
       position: absolute;
       border: 4px solid #08d665;
       border-left-color: transparent;
@@ -42,27 +52,27 @@
       animation: loader-outter 1s cubic-bezier(0.42, 0.61, 0.58, 0.41) infinite;
     }
 
-    .loader-inner {
+    .preloader .loader .loader-inner {
       position: absolute;
       border: 4px solid #08d665;
       border-radius: 50%;
       width: 60px;
       height: 60px;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
+      left: calc(50% - 30px);
+      top: calc(50% - 30px);
       border-right: 0;
       border-top-color: transparent;
       animation: loader-inner 1s cubic-bezier(0.42, 0.61, 0.58, 0.41) infinite;
     }
 
-    .loader span {
-      display: block;
+    .preloader .loader span {
+      display: inline-block;
       position: absolute;
       left: 0;
       right: 0;
-      top: calc(100% + 10px);
       margin: 0 auto;
+      top: 50%;
+      transform: translateY(-50%);
       color: #08d665;
       font-size: 25px;
       font-weight: 700;
@@ -72,16 +82,19 @@
     .preloader::after {
       content: '';
       position: absolute;
+      left: 0;
+      top: 0;
       width: 60%;
       height: 100%;
-      top: 0;
+      z-index: -1;
       background: #fff;
       transition: 0.9s;
-      z-index: -1;
     }
 
-    .preloader::before { left: 0; }
-    .preloader::after { right: 0; left: auto; }
+    .preloader::after {
+      left: auto;
+      right: 0;
+    }
 
     .preloader.preloader-deactivate {
       visibility: hidden;
@@ -98,24 +111,23 @@
     }
 
     @keyframes loader-outter {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
     }
 
     @keyframes loader-inner {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(-360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(-360deg);
+      }
     }
-
-    /* Optional: Fade-in page content */
-    body {
-      opacity: 0;
-      transition: opacity 0.9s ease;
-    }
-
-    body.loaded {
-      opacity: 1;
-    }
+    /* END PRELOADER DESIGN */
   </style>
 </head>
 <body>
@@ -130,22 +142,13 @@
   </div>
   <!-- END PRELOADER -->
 
-  <div style="text-align: center; margin-top: 200px;">
-    <h1>Welcome to the Page</h1>
-    <p>This content becomes visible after loader disappears.</p>
-  </div>
-
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       const loader = document.querySelector('.preloader');
-      const body = document.body;
       setTimeout(() => {
         loader.classList.add('preloader-deactivate');
-        setTimeout(() => {
-          loader.style.display = 'none';
-          body.classList.add('loaded');
-        }, 900); // matches transition duration
-      }, 3000); // 3 seconds delay
+        setTimeout(() => loader.style.display = 'none', 900);
+      }, 3000);
     });
   </script>
 
