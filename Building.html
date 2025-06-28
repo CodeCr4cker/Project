@@ -3,272 +3,113 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Skyline Constructions</title>
+  <title>Document</title>
   <style>
-    :root {
-      --primary: #0e2f44;
-      --accent: #1da1f2;
-      --light: #f9f9f9;
-      --dark: #111;
-      --white: #fff;
-    }
-
-    body {
+    /* Global Reset and Background */
+    html, body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: var(--light);
-      color: var(--dark);
-      scroll-behavior: smooth;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background-color: red; /* Page background after loader disappears */
+      overflow: hidden;
     }
 
-    header.intro {
+    /* START PRELOADER DESIGN */
+    .preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #ffffff; /* Solid background to block content */
+      z-index: 9999999;
       display: flex;
       align-items: center;
-      padding: 2rem;
-      background: var(--primary);
-      color: var(--white);
-      gap: 2rem;
-      animation: fadeIn 1.5s ease;
-    }
-
-    .profile-img {
-      width: 150px;
-      height: 150px;
-      border-radius: 100px;
-      object-fit: cover;
-      border: 5px solid var(--accent);
-    }
-
-    .buildings {
-      padding: 2rem;
-      background: var(--white);
-      animation: slideUp 1s ease;
-    }
-
-    .buildings h2 {
-      text-align: center;
-      margin-bottom: 1rem;
-      color: var(--primary);
-    }
-
-    .gallery {
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
       justify-content: center;
+      transition: opacity 0.9s ease;
     }
 
-    .building-card {
-      width: 300px;
-      cursor: pointer;
-      background: var(--light);
-      border-radius: 10px;
-      box-shadow: 0 0 10px #ccc;
-      transition: transform 0.3s;
-      text-align: center;
-      padding-bottom: 1rem;
+    .preloader.preloader-deactivate {
+      opacity: 0;
+      pointer-events: none;
     }
 
-    .building-card img {
+    .loader {
+      position: relative;
+      width: 90px;
+      height: 90px;
+    }
+
+    .loader .loader-outter {
+      position: absolute;
+      border: 4px solid #08d665;
+      border-left-color: transparent;
+      border-bottom: 0;
       width: 100%;
-      height: 200px;
-      object-fit: cover;
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
+      height: 100%;
+      border-radius: 50%;
+      animation: loader-outter 1s cubic-bezier(0.42, 0.61, 0.58, 0.41) infinite;
     }
 
-    .building-card:hover {
-      transform: scale(1.05);
+    .loader .loader-inner {
+      position: absolute;
+      border: 4px solid #08d665;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border-right: 0;
+      border-top-color: transparent;
+      animation: loader-inner 1s cubic-bezier(0.42, 0.61, 0.58, 0.41) infinite;
     }
 
-    .contact {
-      padding: 2rem;
-      background: var(--accent);
-      color: var(--white);
-      animation: fadeIn 1.5s ease;
+    .loader span {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      color: #08d665;
+      font-size: 25px;
+      font-weight: 700;
     }
 
-    .contact h2 {
-      text-align: center;
+    @keyframes loader-outter {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
-    .contact form {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      max-width: 500px;
-      margin: auto;
+    @keyframes loader-inner {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(-360deg); }
     }
-
-    .contact input, .contact textarea {
-      padding: 0.8rem;
-      border: none;
-      border-radius: 5px;
-      font-size: 1rem;
-    }
-
-    .contact button {
-      background: var(--primary);
-      color: var(--white);
-      padding: 0.8rem;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .contact button:hover {
-      background: #062030;
-    }
-
-    footer {
-      text-align: center;
-      padding: 1rem;
-      background: var(--primary);
-      color: var(--white);
-    }
-
-    /* MODAL */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 999;
-      left: 0; top: 0;
-      width: 100%; height: 100%;
-      background-color: rgba(0,0,0,0.8);
-      padding-top: 100px;
-    }
-
-    .modal-content {
-      background: var(--white);
-      margin: auto;
-      padding: 20px;
-      width: 60%;
-      border-radius: 10px;
-      animation: zoomIn 0.5s ease;
-    }
-
-    .close {
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    /* ANIMATIONS */
-    @keyframes fadeIn {
-      from {opacity: 0;}
-      to {opacity: 1;}
-    }
-
-    @keyframes slideUp {
-      from {transform: translateY(30px); opacity: 0;}
-      to {transform: translateY(0); opacity: 1;}
-    }
-
-    @keyframes zoomIn {
-      from {transform: scale(0.7);}
-      to {transform: scale(1);}
-    }
-
-    @media screen and (max-width: 768px) {
-      header.intro {
-        flex-direction: column;
-        text-align: center;
-      }
-
-      .modal-content {
-        width: 90%;
-      }
-    }
+    /* END PRELOADER DESIGN */
   </style>
 </head>
 <body>
 
-  <!-- INTRODUCTION -->
-  <header class="intro">
-    <img src="builder.jpg" alt="Builder" class="profile-img" />
-    <div>
-      <h1>Skyline Constructions</h1>
-      <p>Led by Mr. Divyanshu Pandey, we transform blueprints into breathtaking reality. Explore our modern, sustainable, and elegant buildings.</p>
-    </div>
-  </header>
-
-  <!-- BUILDINGS -->
-  <section class="buildings">
-    <h2>Our Projects</h2>
-    <div class="gallery">
-      <div class="building-card" onclick="showDetails(0)">
-        <img src="building1.jpg" alt="Skyview Towers"/>
-        <h3>Skyview Towers</h3>
-      </div>
-      <div class="building-card" onclick="showDetails(1)">
-        <img src="building2.jpg" alt="Green Residency"/>
-        <h3>Green Residency</h3>
-      </div>
-      <div class="building-card" onclick="showDetails(2)">
-        <img src="building3.jpg" alt="Ocean Heights"/>
-        <h3>Ocean Heights</h3>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section class="contact">
-    <h2>Contact Us</h2>
-    <form>
-      <input type="text" placeholder="Your Name" required/>
-      <input type="email" placeholder="Your Email" required/>
-      <textarea rows="5" placeholder="Your Message" required></textarea>
-      <button type="submit">Send Message</button>
-    </form>
-  </section>
-
-  <!-- MODAL -->
-  <div id="modal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal()">&times;</span>
-      <h2 id="modal-title"></h2>
-      <p id="modal-info"></p>
+  <!-- START PRELOADER -->
+  <div class="preloader">
+    <div class="loader">
+      <div class="loader-outter"></div>
+      <div class="loader-inner"></div>
+      <span>D</span>
     </div>
   </div>
+  <!-- END PRELOADER -->
 
-  <!-- FOOTER -->
-  <footer>
-    &copy; 2025 Skyline Constructions. Designed by Divyanshu Pandey.
-  </footer>
-
-  <!-- JAVASCRIPT -->
   <script>
-    const buildings = [
-      {
-        name: "Skyview Towers",
-        details: "Luxury apartments with rooftop pool and city skyline view. 3BHK starting from ₹1.2 Cr. Includes gym, smart home, and 24x7 security."
-      },
-      {
-        name: "Green Residency",
-        details: "Eco-friendly 2BHK homes starting at ₹65L. Surrounded by gardens and equipped with solar energy and rainwater harvesting."
-      },
-      {
-        name: "Ocean Heights",
-        details: "4BHK sea-facing villas with private beach access. ₹2.5 Cr onwards. Infinity pool, smart locks, and concierge services."
-      }
-    ];
-
-    function showDetails(index) {
-      document.getElementById("modal-title").textContent = buildings[index].name;
-      document.getElementById("modal-info").textContent = buildings[index].details;
-      document.getElementById("modal").style.display = "block";
-    }
-
-    function closeModal() {
-      document.getElementById("modal").style.display = "none";
-    }
-
-    window.onclick = function(event) {
-      if (event.target == document.getElementById("modal")) {
-        closeModal();
-      }
-    };
+    window.addEventListener('DOMContentLoaded', () => {
+      const loader = document.querySelector('.preloader');
+      setTimeout(() => {
+        loader.classList.add('preloader-deactivate');
+        setTimeout(() => loader.remove(), 900); // Remove after transition
+        document.body.style.overflow = 'auto'; // Restore scroll
+      }, 3000); // Simulated loading time
+    });
   </script>
+
 </body>
 </html>
